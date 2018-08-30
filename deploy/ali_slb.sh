@@ -27,7 +27,7 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
-  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Region"]; then
+  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Region" ]; then
     Ali_SLB_Access_Id=""
     Ali_SLB_Access_Secret=""
     Ali_SLB_Region=""
