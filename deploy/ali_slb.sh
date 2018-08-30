@@ -69,7 +69,7 @@ _ali_rest() {
   _debug response "$response"
 
   # 上传证书成功, 将证书绑定到监听端口443
-  _set_slb_server_certificate && _ali_set_slb_server_certificate "Set Server Certificate on port 443"
+  #_set_slb_server_certificate "$_slbId" "$_serverCertId" && _ali_set_slb_server_certificate "Set Server Certificate on port 443"
 
   return 0
 }
@@ -135,16 +135,16 @@ _add_slb_ca_query() {
   query=$query'&Version=2014-05-15'
 }
 
-#_add_slb_ca_query "$_ckey" "$_cfullchain"
+#_set_slb_server_certificate "$_slbId" "$_serverCertId"
 _set_slb_server_certificate() {
-  ca_key=$(_readfile "$1")
-  ca_cert=$(_readfile "$2")
+  slbId=$(_readfile "$1")
+  serverCertId=$(_readfile "$2")
   query=''
   query=$query'&Action=SetLoadBalancerHTTPSListenerAttribute'
   query=$query'&RegionId='$Ali_SLB_Region
-  query=$query'&LoadBalancerId=lb-t4nj5vuz8ish9emfk1f20'
+  query=$query'&LoadBalancerId='$slbId
   query=$query'&ListenerPort=443'
-  query=$query'&ServerCertificateId=1231579085529123_15dbf6ff26f_1991415478_2054196746'
+  query=$query'&ServerCertificateId='$serverCertId
   query=$query'&Bandwidth=-1'
   query=$query'&StickySession=on'
   query=$query'&StickySessionType=insert'
