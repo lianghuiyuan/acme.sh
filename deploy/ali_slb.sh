@@ -1,6 +1,5 @@
 #!/bin/bash
 ########  Public functions #####################
-# 参考: https://github.com/Neilpang/acme.sh/wiki/DNS-API-Dev-Guide
 #domain keyfile certfile cafile fullchain
 #Ali_Region="cn-hangzhou"
 #Ali_Api_Key=""
@@ -65,7 +64,7 @@ _ali_nonce() {
 
 _ali_regions() {
   query=''
-  query=$query'&AccessKeyId='$Ali_Api_Key
+  query=$query'AccessKeyId='$Ali_Api_Key
   query=$query'&Action=DescribeRegions'
   query=$query'&Format=json'
   query=$query'&SignatureMethod=HMAC-SHA1'
@@ -80,7 +79,7 @@ _add_slb_ca_query() {
   ca_key=$(_readfile "$1")
   ca_cert=$(_readfile "$2")
   query=''
-  query=$query'&AccessKeyId='$Ali_Api_Key
+  query=$query'AccessKeyId='$Ali_Api_Key
   query=$query'&Action=UploadServerCertificate'
   query=$query'&Format=json'
   query=$query'&PrivateKey='$ca_key
