@@ -125,7 +125,7 @@ _add_slb_ca_query() {
   query=$query'&Action=UploadServerCertificate'
   query=$query'&Format=json'
   query=$query'&PrivateKey='$ca_key
-  query=$query'&RegionId=cn-hangzhou'
+  query=$query'&RegionId='$Ali_SLB_Region
   query=$query'&ServerCertificate='$ca_cert
   query=$query'&ServerCertificateName='$(_date)
   query=$query'&SignatureMethod=HMAC-SHA1'
