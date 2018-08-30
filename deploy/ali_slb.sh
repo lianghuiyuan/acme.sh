@@ -121,18 +121,30 @@ _add_slb_ca_query() {
   ca_key=$(_readfile "$1")
   ca_cert=$(_readfile "$2")
   query=''
-  query=$query'Action=UploadServerCertificate'
-  query=$query'&RegionId=cn-hangzhou'    #$Ali_SLB_Region
-  query=$query'&ServerCertificate='$ca_cert
-  query=$query'&ServerCertificateName='$(_date)
+  query=$query'AccessKeyId='$Ali_SLB_Access_Id
+  query=$query'&Action=UploadServerCertificate'
   query=$query'&Format=json'
   query=$query'&PrivateKey='$ca_key
+  query=$query'&RegionId=cn-hangzhou'
+  query=$query'&ServerCertificate='$ca_cert
+  query=$query'&ServerCertificateName='$(_date)
   query=$query'&SignatureMethod=HMAC-SHA1'
-  query=$query'&Timestamp='$(_timestamp)
-  query=$query'&SignatureVersion=1.0'
   query=$query'&SignatureNonce='$(_ali_nonce)
-  query=$query'&AccessKeyId='$Ali_SLB_Access_Id
+  query=$query'&SignatureVersion=1.0'
+  query=$query'&Timestamp='$(_timestamp)
   query=$query'&Version=2014-05-15'
+  #query=$query'Action=UploadServerCertificate'
+  #query=$query'&RegionId=cn-hangzhou'    #$Ali_SLB_Region
+  #query=$query'&ServerCertificate='$ca_cert
+  #query=$query'&ServerCertificateName='$(_date)
+  #query=$query'&Format=json'
+  #query=$query'&PrivateKey='$ca_key
+  #query=$query'&SignatureMethod=HMAC-SHA1'
+  #query=$query'&Timestamp='$(_timestamp)
+  #query=$query'&SignatureVersion=1.0'
+  #query=$query'&SignatureNonce='$(_ali_nonce)
+  #query=$query'&AccessKeyId='$Ali_SLB_Access_Id
+  #query=$query'&Version=2014-05-15'
 }
 
 #_set_slb_server_certificate "$_slbId" "$_serverCertId"
