@@ -106,7 +106,7 @@ _ali_nonce() {
 
 _ali_regions() {
   query=''
-  query=$query'AccessKeyId='$Ali_SLB_Access_Id
+  query=$query'&AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Action=DescribeRegions'
   query=$query'&Format=json'
   query=$query'&SignatureMethod=HMAC-SHA1'
