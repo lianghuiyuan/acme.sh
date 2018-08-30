@@ -134,8 +134,8 @@ _add_slb_ca_query() {
   #query=$query'&Timestamp='$(_timestamp)
   #query=$query'&Version=2014-05-15'
 
-  query=$query'AccessKeyId='$Ali_SLB_Access_Id
-  query=$query'&Action=UploadServerCertificate'
+  query=$query'Action=UploadServerCertificate'
+  query=$query'&AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Format=json'
   query=$query'&PrivateKey='$ca_key
   query=$query'&RegionId='$Ali_SLB_Region
