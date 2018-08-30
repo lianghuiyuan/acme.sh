@@ -27,16 +27,18 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
-  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ]; then
+  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" || [ -z "$Ali_SLB_Region"]; then
     Ali_SLB_Access_Id=""
     Ali_SLB_Access_Secret=""
-    _err "You don't specify aliyun api key and secret yet."
+    Ali_SLB_Region=""
+    _err "You don't specify aliyun api key, secret yet and Ali_SLB_Region.SLB_Region"
     return 1
   fi
 
   #save the api key and secret to the account conf file.
   _saveaccountconf_mutable Ali_SLB_Access_Id "$Ali_SLB_Access_Id"
   _saveaccountconf_mutable Ali_SLB_Access_Secret "$Ali_SLB_Access_Secret"
+  _saveaccountconf_mutable Ali_SLB_Region "$Ali_SLB_Region"
 
   #_ali_regions && _ali_rest "Regions"
   _add_slb_ca_query "$_ckey" "$_cfullchain" && _ali_rest "Upload Server Certificate"
@@ -104,7 +106,7 @@ _ali_nonce() {
 
 _ali_regions() {
   query=''
-  query=$query'AccessKeyId='$Ali_Api_Key
+  query=$query'AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Action=DescribeRegions'
   query=$query'&Format=json'
   query=$query'&SignatureMethod=HMAC-SHA1'
@@ -129,7 +131,7 @@ _add_slb_ca_query() {
   query=$query'&Timestamp='$(_timestamp)
   query=$query'&SignatureVersion=1.0'
   query=$query'&SignatureNonce='$(_ali_nonce)
-  query=$query'AccessKeyId='$Ali_Api_Key
+  query=$query'&AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Version=2014-05-15'
 }
 
@@ -140,15 +142,15 @@ _set_slb_server_certificate() {
   query=''
   query=$query'&Action=SetLoadBalancerHTTPSListenerAttribute'
   query=$query'&RegionId='$Ali_SLB_Region
-  query=$query'LoadBalancerId=lb-t4nj5vuz8ish9emfk1f20'
-  query=$query'ListenerPort=443'
-  query=$query'ServerCertificateId=1231579085529123_15dbf6ff26f_1991415478_2054196746'
-  query=$query'Bandwidth=-1'
-  query=$query'StickySession=on'
-  query=$query'StickySessionType=insert'
-  query=$query'HealthCheck=on'
+  query=$query'&LoadBalancerId=lb-t4nj5vuz8ish9emfk1f20'
+  query=$query'&ListenerPort=443'
+  query=$query'&ServerCertificateId=1231579085529123_15dbf6ff26f_1991415478_2054196746'
+  query=$query'&Bandwidth=-1'
+  query=$query'&StickySession=on'
+  query=$query'&StickySessionType=insert'
+  query=$query'&HealthCheck=on'
   query=$query'&Version=2014-05-15'
-  query=$query'AccessKeyId='$Ali_Api_Key
+  query=$query'&AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&Timestamp='$(_timestamp)
   query=$query'&SignatureVersion=1.0'
