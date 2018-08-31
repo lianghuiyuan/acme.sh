@@ -112,7 +112,7 @@ _add_slb_ca_query() {
   query=$query'&PrivateKey='$ca_key
   query=$query'&RegionId=cn-hangzhou'
   query=$query'&ServerCertificate='$ca_cert
-  query=$query'&ServerCertificateName='$(_date)
+  query=$query'&ServerCertificateName='$_cdomain'_'$(_date)
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&SignatureNonce='$(_ali_nonce)
   query=$query'&SignatureVersion=1.0'
@@ -122,8 +122,8 @@ _add_slb_ca_query() {
 
 #_set_slb_server_certificate "$slbId" "$serverCertId"
 _set_slb_server_certificate() {
-  local slbId=$(_readfile "$1")
-  local serverCertId=$(_readfile "$2")
+  local slbId=$1
+  local serverCertId=$2
 
   query=''
   query=$query'AccessKeyId='$Ali_SLB_Access_Id
