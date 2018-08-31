@@ -12,6 +12,7 @@
 #domain keyfile certfile cafile fullchain
 #Ali_SLB_Access_Id="My_SLB_Access_Id"
 #Ali_SLB_Access_Secret="My_SLB_Access_Secret"
+#Ali_SLB_Id="Ali_SLB_Id"
 Ali_SLB_Endpoint="https://slb.aliyuncs.com/"
 
 ali_slb_deploy() {
@@ -74,7 +75,6 @@ _ali_rest() {
 
   if [ "UploadServerCertificate" == $1 ]; then
     _debug "上传证书成功, 将证书绑定到监听端口443"
-    # 上传证书成功, 将证书绑定到监听端口443
     _set_slb_server_certificate "$Ali_SLB_Id" "$serverCertId" && _ali_rest "Set Server Certificate on port 443"
   fi
   return 0
@@ -102,22 +102,10 @@ _ali_slb_regions() {
 
 #_add_slb_ca_query "$_ckey" "$_cfullchain"
 _add_slb_ca_query() {
-  ca_key=$(_readfile "$1")
-  ca_cert=$(_readfile "$2")
-  query=''
-  #query=$query'AccessKeyId='$Ali_SLB_Access_Id
-  #query=$query'&Action=UploadServerCertificate'
-  #query=$query'&Format=json'
-  #query=$query'&PrivateKey='$ca_key
-  #query=$query'&RegionId=cn-hangzhou'
-  #query=$query'&ServerCertificate='$ca_cert
-  #query=$query'&ServerCertificateName='$(_date)
-  #query=$query'&SignatureMethod=HMAC-SHA1'
-  #query=$query'&SignatureNonce='$(_ali_nonce)
-  #query=$query'&SignatureVersion=1.0'
-  #query=$query'&Timestamp='$(_timestamp)
-  #query=$query'&Version=2014-05-15'
+  local ca_key=$(_readfile "$1")
+  local ca_cert=$(_readfile "$2")
 
+  query=''
   query=$query'AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Action=UploadServerCertificate'
   query=$query'&Format=json'
@@ -132,12 +120,10 @@ _add_slb_ca_query() {
   query=$query'&Version=2014-05-15'
 }
 
-#_set_slb_server_certificate "$_slbId" "$_serverCertId"
+#_set_slb_server_certificate "$slbId" "$serverCertId"
 _set_slb_server_certificate() {
-  local slbId=$1
-  local serverCertId=$2
-  _debug "1--$slbId"
-  _debug "2--$serverCertId"
+  local slbId=$(_readfile "$1")
+  local serverCertId=$(_readfile "$2")
 
   query=''
   query=$query'AccessKeyId='$Ali_SLB_Access_Id
