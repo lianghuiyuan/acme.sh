@@ -9,7 +9,6 @@
 ########  Public functions #####################
 # 参考: https://github.com/Neilpang/acme.sh/wiki/DNS-API-Dev-Guide
 #domain keyfile certfile cafile fullchain
-#Ali_SLB_Region="My_SLB_Region"
 #Ali_SLB_Access_Id="My_SLB_Access_Id"
 #Ali_SLB_Access_Secret="My_SLB_Access_Secret"
 Ali_SLB_Domain="https://slb.aliyuncs.com/"
@@ -27,18 +26,16 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
-  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Region" ]; then
+  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] ]; then
     Ali_SLB_Access_Id=""
     Ali_SLB_Access_Secret=""
-    Ali_SLB_Region=""
-    _err "You don't specify aliyun api key or secret yet or Ali_SLB_Region"
+    _err "You don't specify aliyun api key or secret yet"
     return 1
   fi
 
   #save the api key and secret to the account conf file.
   _saveaccountconf_mutable Ali_SLB_Access_Id "$Ali_SLB_Access_Id"
   _saveaccountconf_mutable Ali_SLB_Access_Secret "$Ali_SLB_Access_Secret"
-  _saveaccountconf_mutable Ali_SLB_Region "$Ali_SLB_Region"
 
   #_ali_regions && _ali_rest "Regions"
   _add_slb_ca_query "$_ckey" "$_cfullchain" && _ali_rest "Upload Server Certificate"
@@ -104,7 +101,7 @@ _ali_nonce() {
   date +"%s%N"
 }
 
-_ali_regions() {
+_ali_slb_regions() {
   query=''
   query=$query'AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Action=DescribeRegions'
@@ -125,7 +122,7 @@ _add_slb_ca_query() {
   #query=$query'&Action=UploadServerCertificate'
   #query=$query'&Format=json'
   #query=$query'&PrivateKey='$ca_key
-  #query=$query'&RegionId='$Ali_SLB_Region
+  #query=$query'&RegionId=cn-hangzhou'
   #query=$query'&ServerCertificate='$ca_cert
   #query=$query'&ServerCertificateName='$(_date)
   #query=$query'&SignatureMethod=HMAC-SHA1'
@@ -138,7 +135,7 @@ _add_slb_ca_query() {
   query=$query'&AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Format=json'
   query=$query'&PrivateKey='$ca_key
-  query=$query'&RegionId='$Ali_SLB_Region
+  query=$query'&RegionId=cn-hangzhou'
   query=$query'&ServerCertificate='$ca_cert
   query=$query'&ServerCertificateName='$(_date)
   query=$query'&SignatureMethod=HMAC-SHA1'
@@ -154,7 +151,7 @@ _set_slb_server_certificate() {
   serverCertId=$(_readfile "$2")
   query=''
   query=$query'Action=SetLoadBalancerHTTPSListenerAttribute'
-  query=$query'&RegionId='$Ali_SLB_Region
+  query=$query'&RegionId=cn-hangzhou'
   query=$query'&LoadBalancerId='$slbId
   query=$query'&ListenerPort=443'
   query=$query'&ServerCertificateId='$serverCertId
