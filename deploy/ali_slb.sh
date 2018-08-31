@@ -53,9 +53,7 @@ _ali_rest() {
   signature=$(printf "%s" "GET&%2F&$(_ali_urlencode "$query")" | _hmac "sha1" "$(printf "%s" "$Ali_SLB_Access_Secret&" | _hex_dump | tr -d " ")" | _base64)
   signature=$(_ali_urlencode "$signature")
   url="$Ali_SLB_Endpoint?$query&Signature=$signature"
-  _debug "0000000000000000000"
   if ! response="$(_get "$url" "" 3000)"; then
-    _debug "1111111111111111111"
     _err "Error <$1>"
     return 1
   fi
@@ -63,13 +61,11 @@ _ali_rest() {
   if [ -z "$2" ]; then
     message="$(printf "%s" "$response" | _egrep_o "\"Message\":\"[^\"]*\"" | cut -d : -f 2 | tr -d \")"
     if [ -n "$message" ]; then
-      _debug "2222222222222222222222"
       _err "$message"
       return 1
     fi
   fi
 
-  _debug "3333333333333333333"
   _debug response "$response"
   local serverCertId=$(get_json_value "$response" "ServerCertificateId")
   _debug "$serverCertId"
@@ -144,21 +140,21 @@ _set_slb_server_certificate() {
   _debug "2--$serverCertId"
 
   query=''
-  query=$query'Action=SetLoadBalancerHTTPSListenerAttribute'
-  query=$query'&RegionId=cn-hangzhou'
-  query=$query'&LoadBalancerId='$Ali_SLB_Id
-  query=$query'&ListenerPort=443'
-  query=$query'&ServerCertificateId='$serverCertId
+  query=$query'AccessKeyId='$Ali_SLB_Access_Id
+  query=$query'&Action=SetLoadBalancerHTTPSListenerAttribute'
   query=$query'&Bandwidth=-1'
+  query=$query'&HealthCheck=on'
+  query=$query'&ListenerPort=443'
+  query=$query'&LoadBalancerId='$Ali_SLB_Id
+  query=$query'&RegionId=cn-hangzhou'
+  query=$query'&ServerCertificateId='$serverCertId
+  query=$query'&SignatureMethod=HMAC-SHA1'
+  query=$query'&SignatureNonce='$(_ali_nonce)
+  query=$query'&SignatureVersion=1.0'
   query=$query'&StickySession=on'
   query=$query'&StickySessionType=insert'
-  query=$query'&HealthCheck=on'
-  query=$query'&Version=2014-05-15'
-  query=$query'&AccessKeyId='$Ali_SLB_Access_Id
-  query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&Timestamp='$(_timestamp)
-  query=$query'&SignatureVersion=1.0'
-  query=$query'&SignatureNonce='$(_ali_nonce)
+  query=$query'&Version=2014-05-15'
 }
 
 function get_json_value()
