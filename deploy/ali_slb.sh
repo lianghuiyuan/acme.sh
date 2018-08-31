@@ -134,7 +134,7 @@ _set_slb_server_certificate() {
   query=$query'&Action=SetLoadBalancerHTTPSListenerAttribute'
   query=$query'&Bandwidth=-1'
   query=$query'&CookieTimeout=86400'
-  query=$query'&HealthCheck=on'
+  query=$query'&HealthCheck=off'
   query=$query'&ListenerPort=443'
   query=$query'&LoadBalancerId='$slbId
   query=$query'&RegionId=cn-hangzhou'
