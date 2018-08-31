@@ -26,7 +26,7 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
-  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] ]; then
+  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ]; then
     Ali_SLB_Access_Id=""
     Ali_SLB_Access_Secret=""
     _err "You don't specify aliyun api key or secret yet"
