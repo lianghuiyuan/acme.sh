@@ -69,6 +69,8 @@ _ali_rest() {
 
   _debug "3333333333333333333"
   _debug response "$response"
+  serverCertId=$(get_json_value "$response" "ServerCertificateId")
+  _debug "$serverCertId"
 
   # 上传证书成功, 将证书绑定到监听端口443
   #_set_slb_server_certificate "$_slbId" "$_serverCertId" && _ali_rest "Set Server Certificate on port 443"
@@ -150,6 +152,23 @@ _set_slb_server_certificate() {
   query=$query'&SignatureVersion=1.0'
   query=$query'&SignatureNonce='$(_ali_nonce)
 }
+
+function get_json_value()
+{
+  local json=$1
+  local key=$2
+
+  if [[ -z "$3" ]]; then
+    local num=1
+  else
+    local num=$3
+  fi
+
+  local value=$(echo "${json}" | awk -F"[,:}]" '{for(i=1;i<=NF;i++){if($i~/'${key}'\042/){print $(i+1)}}}' | tr -d '"' | sed -n ${num}p)
+
+  echo ${value}
+}
+
 _readfile() {
   echo $(php -r "echo str_replace(['+','*','%7E'], ['%20','%2A','~'], urlencode(file_get_contents(\"$1\")));")
 }
