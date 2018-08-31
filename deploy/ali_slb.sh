@@ -134,8 +134,8 @@ _add_slb_ca_query() {
 
 #_set_slb_server_certificate "$_slbId" "$_serverCertId"
 _set_slb_server_certificate() {
-  slbId=$(_readfile "$1")
-  serverCertId=$(_readfile "$2")
+  local slbId=$1
+  local serverCertId=$2
   _debug "1--$slbId"
   _debug "2--$serverCertId"
 
