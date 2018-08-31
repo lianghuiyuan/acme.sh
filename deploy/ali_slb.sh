@@ -11,7 +11,7 @@
 #domain keyfile certfile cafile fullchain
 #Ali_SLB_Access_Id="My_SLB_Access_Id"
 #Ali_SLB_Access_Secret="My_SLB_Access_Secret"
-Ali_SLB_Domain="https://slb.aliyuncs.com/"
+Ali_SLB_Endpoint="https://slb.aliyuncs.com/"
 
 ali_slb_deploy() {
   _cdomain="$1"
@@ -49,7 +49,7 @@ _ali_rest() {
 
   signature=$(printf "%s" "GET&%2F&$(_ali_urlencode "$query")" | _hmac "sha1" "$(printf "%s" "$Ali_SLB_Access_Secret&" | _hex_dump | tr -d " ")" | _base64)
   signature=$(_ali_urlencode "$signature")
-  url="$Ali_SLB_Domain?$query&Signature=$signature"
+  url="$Ali_SLB_Endpoint?$query&Signature=$signature"
   if ! response="$(_get "$url" "" 3000)"; then
     _err "Error <$1>"
     return 1
@@ -75,7 +75,7 @@ _ali_set_slb_server_certificate() {
 
   signature=$(printf "%s" "GET&%2F&$(_ali_urlencode "$query")" | _hmac "sha1" "$(printf "%s" "$Ali_SLB_Access_Secret&" | _hex_dump | tr -d " ")" | _base64)
   signature=$(_ali_urlencode "$signature")
-  url="$Ali_SLB_Domain?$query&Signature=$signature"
+  url="$Ali_SLB_Endpoint?$query&Signature=$signature"
   if ! response="$(_get "$url" "" 3000)"; then
     _err "Error <$1>"
     return 1
@@ -131,8 +131,8 @@ _add_slb_ca_query() {
   #query=$query'&Timestamp='$(_timestamp)
   #query=$query'&Version=2014-05-15'
 
-  query=$query'Action=UploadServerCertificate'
-  query=$query'&AccessKeyId='$Ali_SLB_Access_Id
+  query=$query'AccessKeyId='$Ali_SLB_Access_Id
+  query=$query'&Action=UploadServerCertificate'
   query=$query'&Format=json'
   query=$query'&PrivateKey='$ca_key
   query=$query'&RegionId=cn-hangzhou'
