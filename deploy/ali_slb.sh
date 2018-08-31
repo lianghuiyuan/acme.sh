@@ -74,6 +74,7 @@ _ali_rest() {
   if [ "UploadServerCertificate" == $1 ]; then
     _debug "上传证书成功, 将证书绑定到监听端口443"
     _set_slb_server_certificate "$Ali_SLB_Id" "$_serverCertId" && _ali_rest "Set Server Certificate on port 443"
+  fi
   return 0
 }
 
@@ -97,7 +98,7 @@ _add_slb_ca_query() {
   query=$query'&PrivateKey='$ca_key
   query=$query'&RegionId='$Ali_SLB_Region
   query=$query'&ServerCertificate='$ca_cert
-  query=$query'&ServerCertificateName='$(_readfile "$_cdomain")
+  query=$query'&ServerCertificateName='$(_readfile "$_date")
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&SignatureNonce='$(_ali_nonce)
   query=$query'&SignatureVersion=1.0'
