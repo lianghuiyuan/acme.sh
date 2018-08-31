@@ -72,6 +72,7 @@ _ali_rest() {
   _debug response "$response"
   serverCertId=$(get_json_value "$response" "ServerCertificateId")
   _debug "$serverCertId"
+  _debug "$Ali_SLB_Id"
 
   # 上传证书成功, 将证书绑定到监听端口443
   _set_slb_server_certificate "$Ali_SLB_Id" "$serverCertId" && _ali_rest "Set Server Certificate on port 443"
@@ -135,10 +136,13 @@ _add_slb_ca_query() {
 _set_slb_server_certificate() {
   slbId=$(_readfile "$1")
   serverCertId=$(_readfile "$2")
+  _debug "1--$slbId"
+  _debug "2--$serverCertId"
+
   query=''
   query=$query'Action=SetLoadBalancerHTTPSListenerAttribute'
   query=$query'&RegionId=cn-hangzhou'
-  query=$query'&LoadBalancerId='$slbId
+  query=$query'&LoadBalancerId='$Ali_SLB_Id
   query=$query'&ListenerPort=443'
   query=$query'&ServerCertificateId='$serverCertId
   query=$query'&Bandwidth=-1'
