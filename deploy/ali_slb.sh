@@ -135,7 +135,7 @@ _set_slb_server_certificate() {
   query=$query'&CookieTimeout=86400'
   query=$query'&HealthCheck=off'
   query=$query'&ListenerPort=443'
-  query=$query'&LoadBalancerId='$Ali_SLB_Id
+  query=$query'&LoadBalancerId='$slbId
   query=$query'&RegionId=cn-hangzhou'
   query=$query'&ServerCertificateId='$serverCertId
   query=$query'&SignatureMethod=HMAC-SHA1'
