@@ -30,6 +30,7 @@ ali_slb_deploy() {
   if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ]; then
     Ali_SLB_Access_Id=""
     Ali_SLB_Access_Secret=""
+    Ali_SLB_Id=""
     _err "You don't specify aliyun api access key or secret or SLB_ID yet"
     return 1
   fi
@@ -73,10 +74,13 @@ _ali_rest() {
   local serverCertId=$(get_json_value "$response" "ServerCertificateId")
   _debug "$serverCertId"
   _debug "$Ali_SLB_Id"
+  _debug "$1"
 
-  # 上传证书成功, 将证书绑定到监听端口443
-  _set_slb_server_certificate "$Ali_SLB_Id" "$serverCertId" && _ali_rest "Set Server Certificate on port 443"
-
+  if ($1 == "Upload Server Certificate")
+  {
+    # 上传证书成功, 将证书绑定到监听端口443
+    _set_slb_server_certificate "$Ali_SLB_Id" "$serverCertId" && _ali_rest "Set Server Certificate on port 443"
+  }
   return 0
 }
 
