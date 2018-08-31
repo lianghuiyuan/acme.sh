@@ -6,13 +6,15 @@
 #Which will be called by acme.sh to deploy the cert
 #returns 0 means success, otherwise error.
 
-########  Public functions #####################
 # 参考: https://github.com/Neilpang/acme.sh/wiki/DNS-API-Dev-Guide
 # aliyun RPC API签名算法: https://help.aliyun.com/document_detail/66384.html?spm=5176.11065259.1996646101.searchclickresult.82064a56fBWU0Y
+# aliyun RPC API 请求参数排列顺序为： “按照参数名称的字典顺序对请求中所有的请求参数进行排序"  既是根据相关请求参数的首字母按照字母表的顺序进行排序的， A开头的最前，Z最后, 首字母相同的情况下，参考第二个字母的字母表排序。
+########  Public functions #####################
 #domain keyfile certfile cafile fullchain
 #Ali_SLB_Access_Id="My_SLB_Access_Id"
 #Ali_SLB_Access_Secret="My_SLB_Access_Secret"
 #Ali_SLB_Id="Ali_SLB_Id"
+#Ali_SLB_Region="Ali_SLB_Region"
 Ali_SLB_Endpoint="https://slb.aliyuncs.com/"
 
 ali_slb_deploy() {
