@@ -41,7 +41,7 @@ ali_slb_deploy() {
   _saveaccountconf_mutable Ali_SLB_Access_Secret "$Ali_SLB_Access_Secret"
   _saveaccountconf_mutable Ali_SLB_Id "$Ali_SLB_Id"
 
-  #_ali_regions && _ali_rest "Regions"
+  _ali_regions && _ali_rest "Regions"
   _add_slb_ca_query "$_ckey" "$_cfullchain" && _ali_rest "UploadServerCertificate"
 
   #returns 0 means success, otherwise error.
@@ -76,6 +76,9 @@ _ali_rest() {
   if [ "UploadServerCertificate" == $1 ]; then
     _debug "上传证书成功, 将证书绑定到监听端口443"
     _set_slb_server_certificate "$Ali_SLB_Id" "$serverCertId" && _ali_rest "Set Server Certificate on port 443"
+  elif [ "Regions" == $1  ]; then
+    _debug "获取到Regions"
+    Ali_SLB_Region=$(get_json_value "$response" "ServerCertificateId")
   fi
   return 0
 }
@@ -112,7 +115,7 @@ _add_slb_ca_query() {
   query=$query'&PrivateKey='$ca_key
   query=$query'&RegionId=cn-hangzhou'
   query=$query'&ServerCertificate='$ca_cert
-  query=$query'&ServerCertificateName='$_cdomain'_'$(_date)
+  query=$query'&ServerCertificateName='$_cdomain'-'$(_date)
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&SignatureNonce='$(_ali_nonce)
   query=$query'&SignatureVersion=1.0'
