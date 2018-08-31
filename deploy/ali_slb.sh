@@ -115,7 +115,7 @@ _add_slb_ca_query() {
   query=$query'&PrivateKey='$ca_key
   query=$query'&RegionId=cn-hangzhou'
   query=$query'&ServerCertificate='$ca_cert
-  query=$query'&ServerCertificateName='$(_readfile "$_cdomain'-'$(_date)")
+  query=$query'&ServerCertificateName='$(_readfile "$_cdomain")'-'$(_date)
   #query=$query'&ServerCertificateName='$(_date)
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&SignatureNonce='$(_ali_nonce)
