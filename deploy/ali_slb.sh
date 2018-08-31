@@ -143,6 +143,7 @@ _set_slb_server_certificate() {
   query=$query'AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Action=SetLoadBalancerHTTPSListenerAttribute'
   query=$query'&Bandwidth=-1'
+  query=$query'&CookieTimeout=86400'
   query=$query'&HealthCheck=off'
   query=$query'&ListenerPort=443'
   query=$query'&LoadBalancerId='$Ali_SLB_Id
@@ -153,7 +154,6 @@ _set_slb_server_certificate() {
   query=$query'&SignatureVersion=1.0'
   query=$query'&StickySession=on'
   query=$query'&StickySessionType=insert'
-  query=$query'&CookieTimeout=86400'
   query=$query'&Timestamp='$(_timestamp)
   query=$query'&Version=2014-05-15'
 }
