@@ -28,11 +28,12 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
-  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ]; then
+  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ] || [ -z "$Ali_SLB_Region" ]; then
     Ali_SLB_Access_Id=""
     Ali_SLB_Access_Secret=""
     Ali_SLB_Id=""
-    _err "You don't specify aliyun api access key or secret or SLB_ID yet"
+    Ali_SLB_Region=""
+    _err "You don't specify aliyun api access key or secret or SLB_ID or SLB_Region yet"
     return 1
   fi
 
@@ -40,8 +41,8 @@ ali_slb_deploy() {
   _saveaccountconf_mutable Ali_SLB_Access_Id "$Ali_SLB_Access_Id"
   _saveaccountconf_mutable Ali_SLB_Access_Secret "$Ali_SLB_Access_Secret"
   _saveaccountconf_mutable Ali_SLB_Id "$Ali_SLB_Id"
+  _saveaccountconf_mutable Ali_SLB_Region "$Ali_SLB_Region"
 
-  #_ali_regions && _ali_rest "Regions"
   _add_slb_ca_query "$_ckey" "$_cfullchain" && _ali_rest "UploadServerCertificate"
 
   #returns 0 means success, otherwise error.
@@ -68,18 +69,11 @@ _ali_rest() {
   fi
 
   _debug response "$response"
-  local serverCertId=$(get_json_value "$response" "ServerCertificateId")
-  _debug "$serverCertId"
-  _debug "$Ali_SLB_Id"
-  _debug "$1"
+  local _serverCertId=$(get_json_value "$response" "ServerCertificateId")
 
   if [ "UploadServerCertificate" == $1 ]; then
     _debug "上传证书成功, 将证书绑定到监听端口443"
-    _set_slb_server_certificate "$Ali_SLB_Id" "$serverCertId" && _ali_rest "Set Server Certificate on port 443"
-  #elif [ "Regions" == $1  ]; then
-  #  _debug "获取到Regions"
-  #  Ali_SLB_Region=$(get_json_value "$response" "ServerCertificateId")
-  fi
+    _set_slb_server_certificate "$Ali_SLB_Id" "$_serverCertId" && _ali_rest "Set Server Certificate on port 443"
   return 0
 }
 
@@ -89,18 +83,6 @@ _ali_urlencode() {
 
 _ali_nonce() {
   date +"%s%N"
-}
-
-_ali_regions() {
-  query=''
-  query=$query'AccessKeyId='$Ali_SLB_Access_Id
-  query=$query'&Action=DescribeRegions'
-  query=$query'&Format=json'
-  query=$query'&SignatureMethod=HMAC-SHA1'
-  query=$query'&SignatureNonce='$(_ali_nonce)
-  query=$query'&SignatureVersion=1.0'
-  query=$query'&Timestamp='$_timestamp
-  query=$query'&Version=2014-05-15'
 }
 
 #_add_slb_ca_query "$_ckey" "$_cfullchain"
@@ -113,10 +95,9 @@ _add_slb_ca_query() {
   query=$query'&Action=UploadServerCertificate'
   query=$query'&Format=json'
   query=$query'&PrivateKey='$ca_key
-  query=$query'&RegionId=cn-hangzhou'
+  query=$query'&RegionId='$Ali_SLB_Region
   query=$query'&ServerCertificate='$ca_cert
-  query=$query'&ServerCertificateName='$(_readfile "$_cdomain")$(_date)
-  #query=$query'&ServerCertificateName='$(_date)
+  query=$query'&ServerCertificateName='$(_readfile "$_cdomain")
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&SignatureNonce='$(_ali_nonce)
   query=$query'&SignatureVersion=1.0'
@@ -137,7 +118,7 @@ _set_slb_server_certificate() {
   query=$query'&HealthCheck=off'
   query=$query'&ListenerPort=443'
   query=$query'&LoadBalancerId='$slbId
-  query=$query'&RegionId=cn-hangzhou'
+  query=$query'&RegionId='$Ali_SLB_Region
   query=$query'&ServerCertificateId='$serverCertId
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&SignatureNonce='$(_ali_nonce)
