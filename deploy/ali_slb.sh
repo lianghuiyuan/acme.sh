@@ -133,7 +133,7 @@ _set_slb_server_certificate() {
   query=$query'AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Action=SetLoadBalancerHTTPSListenerAttribute'
   query=$query'&Bandwidth=-1'
-  #query=$query'&CookieTimeout=86400'
+  query=$query'&CookieTimeout=86400'
   query=$query'&HealthCheck=on'
   query=$query'&ListenerPort=443'
   query=$query'&LoadBalancerId='$slbId
