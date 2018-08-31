@@ -99,7 +99,7 @@ _add_slb_ca_query() {
   query=$query'&PrivateKey='$ca_key
   query=$query'&RegionId='$Ali_SLB_Region
   query=$query'&ServerCertificate='$ca_cert
-  query=$query'&ServerCertificateName='$_date
+  query=$query'&ServerCertificateName=1111'    #$_date
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&SignatureNonce='$(_ali_nonce)
   query=$query'&SignatureVersion=1.0'
