@@ -70,7 +70,7 @@ _ali_rest() {
 
   _debug "3333333333333333333"
   _debug response "$response"
-  serverCertId=$(get_json_value "$response" "ServerCertificateId")
+  local serverCertId=$(get_json_value "$response" "ServerCertificateId")
   _debug "$serverCertId"
   _debug "$Ali_SLB_Id"
 
