@@ -52,6 +52,7 @@ _ali_rest() {
   signature=$(_ali_urlencode "$signature")
   url="$Ali_SLB_Endpoint?$query&Signature=$signature"
   if ! response="$(_get "$url" "" 3000)"; then
+    _debug "1111111111111111111"
     _err "Error <$1>"
     return 1
   fi
@@ -59,6 +60,7 @@ _ali_rest() {
   if [ -z "$2" ]; then
     message="$(printf "%s" "$response" | _egrep_o "\"Message\":\"[^\"]*\"" | cut -d : -f 2 | tr -d \")"
     if [ -n "$message" ]; then
+      _debug "2222222222222222222222"
       _err "$message"
       return 1
     fi
