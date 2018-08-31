@@ -153,6 +153,7 @@ _set_slb_server_certificate() {
   query=$query'&SignatureVersion=1.0'
   query=$query'&StickySession=on'
   query=$query'&StickySessionType=insert'
+  query=$query'&CookieTimeout=86400'
   query=$query'&Timestamp='$(_timestamp)
   query=$query'&Version=2014-05-15'
 }
