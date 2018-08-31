@@ -27,16 +27,17 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
-  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ]; then
+  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ]; then
     Ali_SLB_Access_Id=""
     Ali_SLB_Access_Secret=""
-    _err "You don't specify aliyun api key or secret yet"
+    _err "You don't specify aliyun api access key or secret or SLB_ID yet"
     return 1
   fi
 
   #save the api key and secret to the account conf file.
   _saveaccountconf_mutable Ali_SLB_Access_Id "$Ali_SLB_Access_Id"
   _saveaccountconf_mutable Ali_SLB_Access_Secret "$Ali_SLB_Access_Secret"
+  _saveaccountconf_mutable Ali_SLB_Id "$Ali_SLB_Id"
 
   #_ali_regions && _ali_rest "Regions"
   _add_slb_ca_query "$_ckey" "$_cfullchain" && _ali_rest "Upload Server Certificate"
@@ -73,8 +74,7 @@ _ali_rest() {
   _debug "$serverCertId"
 
   # 上传证书成功, 将证书绑定到监听端口443
-  #_set_slb_server_certificate "$_slbId" "$_serverCertId" && _ali_rest "Set Server Certificate on port 443"
-  _set_slb_server_certificate "lb-bp1nzt9lv390kd79uztea" "1509613042118023_1658eb46780_819298432_-1697713486" && _ali_rest "Set Server Certificate on port 443"
+  _set_slb_server_certificate "$Ali_SLB_Id" "$serverCertId" && _ali_rest "Set Server Certificate on port 443"
 
   return 0
 }
