@@ -41,7 +41,7 @@ ali_slb_deploy() {
   _saveaccountconf_mutable Ali_SLB_Id "$Ali_SLB_Id"
 
   #_ali_regions && _ali_rest "Regions"
-  _add_slb_ca_query "$_ckey" "$_cfullchain" && _ali_rest "Upload Server Certificate"
+  _add_slb_ca_query "$_ckey" "$_cfullchain" && _ali_rest "UploadServerCertificate"
 
   #returns 0 means success, otherwise error.
   return 0
