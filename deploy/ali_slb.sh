@@ -51,6 +51,7 @@ _ali_rest() {
   signature=$(printf "%s" "GET&%2F&$(_ali_urlencode "$query")" | _hmac "sha1" "$(printf "%s" "$Ali_SLB_Access_Secret&" | _hex_dump | tr -d " ")" | _base64)
   signature=$(_ali_urlencode "$signature")
   url="$Ali_SLB_Endpoint?$query&Signature=$signature"
+  _debug "0000000000000000000"
   if ! response="$(_get "$url" "" 3000)"; then
     _debug "1111111111111111111"
     _err "Error <$1>"
@@ -66,6 +67,7 @@ _ali_rest() {
     fi
   fi
 
+  _debug "3333333333333333333"
   _debug response "$response"
 
   # 上传证书成功, 将证书绑定到监听端口443
