@@ -8,6 +8,7 @@
 
 ########  Public functions #####################
 # 参考: https://github.com/Neilpang/acme.sh/wiki/DNS-API-Dev-Guide
+# aliyun 签名算法: https://help.aliyun.com/document_detail/66384.html?spm=5176.11065259.1996646101.searchclickresult.82064a56fBWU0Y
 #domain keyfile certfile cafile fullchain
 #Ali_SLB_Access_Id="My_SLB_Access_Id"
 #Ali_SLB_Access_Secret="My_SLB_Access_Secret"
@@ -140,9 +141,9 @@ _add_slb_ca_query() {
   query=$query'&ServerCertificateName='$(_date)
   query=$query'&SignatureMethod=HMAC-SHA1'
   query=$query'&SignatureNonce='$(_ali_nonce)
-  query=$query'&SignatureVersion=1.0'
   query=$query'&Timestamp='$(_timestamp)
   query=$query'&Version=2014-05-15'
+  query=$query'&SignatureVersion=1.0'
 }
 
 #_set_slb_server_certificate "$_slbId" "$_serverCertId"
