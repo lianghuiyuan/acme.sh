@@ -143,7 +143,7 @@ _set_slb_server_certificate() {
   query=$query'AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Action=SetLoadBalancerHTTPSListenerAttribute'
   query=$query'&Bandwidth=-1'
-  query=$query'&HealthCheck=on'
+  query=$query'&HealthCheck=off'
   query=$query'&ListenerPort=443'
   query=$query'&LoadBalancerId='$Ali_SLB_Id
   query=$query'&RegionId=cn-hangzhou'
