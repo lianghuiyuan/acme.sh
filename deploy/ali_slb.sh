@@ -91,7 +91,7 @@ _ali_nonce() {
   date +"%s%N"
 }
 
-_ali_slb_regions() {
+_ali_regions() {
   query=''
   query=$query'AccessKeyId='$Ali_SLB_Access_Id
   query=$query'&Action=DescribeRegions'
