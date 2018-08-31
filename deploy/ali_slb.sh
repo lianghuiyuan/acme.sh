@@ -76,7 +76,7 @@ _ali_rest() {
   _debug "$Ali_SLB_Id"
   _debug "$1"
 
-  if [ $1 == "Upload Server Certificate" ]; then
+  if [ $1 == 'Upload Server Certificate' ]; then
     _debug "上传证书成功, 将证书绑定到监听端口443"
     # 上传证书成功, 将证书绑定到监听端口443
     _set_slb_server_certificate "$Ali_SLB_Id" "$serverCertId" && _ali_rest "Set Server Certificate on port 443"
