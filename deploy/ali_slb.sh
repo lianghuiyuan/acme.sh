@@ -30,20 +30,25 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
+  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ] || [ -z "$Ali_SLB_Region" ] || [ -z "$Ali_SLB_Https_Port" ]; then
+    _debug "You don't specify Ali_SLB_Access_Id or Ali_SLB_Access_Secret or Ali_SLB_Id or Ali_SLB_Region or Ali_SLB_Https_Port yet"
+    Ali_SLB_Access_Id=$(_readaccountconf_mutable "Ali_SLB_Access_Id")
+    Ali_SLB_Access_Secret=$(_readaccountconf_mutable "Ali_SLB_Access_Secret")
+    Ali_SLB_Id=$(_readaccountconf_mutable "Ali_SLB_Id")
+    Ali_SLB_Region=$(_readaccountconf_mutable "Ali_SLB_Region")
+    Ali_SLB_Https_Port=$(_readaccountconf_mutable "Ali_SLB_Https_Port")
+    _debug "read Ali_SLB_Access_Id, Ali_SLB_Access_Secret, Ali_SLB_Id, Ali_SLB_Region, Ali_SLB_Https_Port from .conf file"
+  fi
+
   #save the api key and secret to the account conf file.
   _saveaccountconf_mutable Ali_SLB_Access_Id "$Ali_SLB_Access_Id"
   _saveaccountconf_mutable Ali_SLB_Access_Secret "$Ali_SLB_Access_Secret"
   _saveaccountconf_mutable Ali_SLB_Id "$Ali_SLB_Id"
   _saveaccountconf_mutable Ali_SLB_Region "$Ali_SLB_Region"
-  _saveaccountconf_mutable Ali_SLB_Region "$Ali_SLB_Https_Port"
+  _saveaccountconf_mutable Ali_SLB_Https_Port "$Ali_SLB_Https_Port"
 
   if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ] || [ -z "$Ali_SLB_Region" ] || [ -z "$Ali_SLB_Https_Port" ]; then
-    Ali_SLB_Access_Id=""
-    Ali_SLB_Access_Secret=""
-    Ali_SLB_Id=""
-    Ali_SLB_Region=""
-    Ali_SLB_Https_Port=""
-    _err "You don't specify Ali_SLB_Access_Id or Ali_SLB_Access_Secret or Ali_SLB_Id or Ali_SLB_Region or Ali_SLB_Https_Port yet"
+    _err "Ali_SLB_Access_Id or Ali_SLB_Access_Secret or Ali_SLB_Id or Ali_SLB_Region or Ali_SLB_Https_Port is still Null yet"
     return 1
   fi
 
