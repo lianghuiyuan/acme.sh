@@ -10,8 +10,8 @@ dns_ali_add() {
   fulldomain=$1
   txtvalue=$2
 
-  Ali_DNS_Access_Id="${Ali_DNS_Access_Id:-$(_readaccountconf_mutable Ali_DNS_Access_Id)}"
-  Ali_DNS_Access_Secret="${Ali_DNS_Access_Secret:-$(_readaccountconf_mutable Ali_DNS_Access_Secret)}"
+  Ali_DNS_Access_Id="${Ali_DNS_Access_Id:-$(_readdomainconf Ali_DNS_Access_Id)}"
+  Ali_DNS_Access_Secret="${Ali_DNS_Access_Secret:-$(_readdomainconf Ali_DNS_Access_Secret)}"
   if [ -z "$Ali_DNS_Access_Id" ] || [ -z "$Ali_DNS_Access_Secret" ]; then
     Ali_DNS_Access_Id=""
     Ali_DNS_Access_Secret=""
@@ -20,8 +20,8 @@ dns_ali_add() {
   fi
 
   #save the api key and secret to the account conf file.
-  _saveaccountconf_mutable Ali_DNS_Access_Id "$Ali_DNS_Access_Id"
-  _saveaccountconf_mutable Ali_DNS_Access_Secret "$Ali_DNS_Access_Secret"
+  _savedomainconf Ali_DNS_Access_Id "$Ali_DNS_Access_Id"
+  _savedomainconf Ali_DNS_Access_Secret "$Ali_DNS_Access_Secret"
 
   _debug "First detect the root zone"
   if ! _get_root "$fulldomain"; then
@@ -35,8 +35,8 @@ dns_ali_add() {
 dns_ali_rm() {
   fulldomain=$1
   txtvalue=$2
-  Ali_DNS_Access_Id="${Ali_DNS_Access_Id:-$(_readaccountconf_mutable Ali_DNS_Access_Id)}"
-  Ali_DNS_Access_Secret="${Ali_DNS_Access_Secret:-$(_readaccountconf_mutable Ali_DNS_Access_Secret)}"
+  Ali_DNS_Access_Id="${Ali_DNS_Access_Id:-$(_readdomainconf Ali_DNS_Access_Id)}"
+  Ali_DNS_Access_Secret="${Ali_DNS_Access_Secret:-$(_readdomainconf Ali_DNS_Access_Secret)}"
 
   _debug "First detect the root zone"
   if ! _get_root "$fulldomain"; then
