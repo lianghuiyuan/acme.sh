@@ -80,7 +80,7 @@ _ali_rest() {
   _debug response "$response"
   local _serverCertId=$(get_json_value "$response" "ServerCertificateId")
 
-  if [ "UploadServerCertificate" == $1 ]; then
+  if [ "UploadServerCertificate" == "$1" ]; then
     _debug "上传证书成功, 将证书绑定到监听端口"
     _set_slb_server_certificate "$Ali_SLB_Id" "$_serverCertId" && _ali_rest "Set Server Certificate on port"
   fi
