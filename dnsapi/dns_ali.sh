@@ -2,26 +2,26 @@
 
 Ali_API="https://alidns.aliyuncs.com/"
 
-#Ali_Key="LTqIA87hOKdjevsf5"
-#Ali_Secret="0p5EYueFNq501xnCPzKNbx6K51qPH2"
+#Ali_DNS_Access_Id="LTqIA87hOKdjevsf5"
+#Ali_DNS_Access_Secret="0p5EYueFNq501xnCPzKNbx6K51qPH2"
 
 #Usage: dns_ali_add   _acme-challenge.www.domain.com   "XKrxpRBosdIKFzxW_CT3KLZNf6q0HG9i01zxXp5CPBs"
 dns_ali_add() {
   fulldomain=$1
   txtvalue=$2
 
-  Ali_Key="${Ali_Key:-$(_readaccountconf_mutable Ali_Key)}"
-  Ali_Secret="${Ali_Secret:-$(_readaccountconf_mutable Ali_Secret)}"
-  if [ -z "$Ali_Key" ] || [ -z "$Ali_Secret" ]; then
-    Ali_Key=""
-    Ali_Secret=""
+  Ali_DNS_Access_Id="${Ali_DNS_Access_Id:-$(_readaccountconf_mutable Ali_DNS_Access_Id)}"
+  Ali_DNS_Access_Secret="${Ali_DNS_Access_Secret:-$(_readaccountconf_mutable Ali_DNS_Access_Secret)}"
+  if [ -z "$Ali_DNS_Access_Id" ] || [ -z "$Ali_DNS_Access_Secret" ]; then
+    Ali_DNS_Access_Id=""
+    Ali_DNS_Access_Secret=""
     _err "You don't specify aliyun api key and secret yet."
     return 1
   fi
 
   #save the api key and secret to the account conf file.
-  _saveaccountconf_mutable Ali_Key "$Ali_Key"
-  _saveaccountconf_mutable Ali_Secret "$Ali_Secret"
+  _saveaccountconf_mutable Ali_DNS_Access_Id "$Ali_DNS_Access_Id"
+  _saveaccountconf_mutable Ali_DNS_Access_Secret "$Ali_DNS_Access_Secret"
 
   _debug "First detect the root zone"
   if ! _get_root "$fulldomain"; then
@@ -35,8 +35,8 @@ dns_ali_add() {
 dns_ali_rm() {
   fulldomain=$1
   txtvalue=$2
-  Ali_Key="${Ali_Key:-$(_readaccountconf_mutable Ali_Key)}"
-  Ali_Secret="${Ali_Secret:-$(_readaccountconf_mutable Ali_Secret)}"
+  Ali_DNS_Access_Id="${Ali_DNS_Access_Id:-$(_readaccountconf_mutable Ali_DNS_Access_Id)}"
+  Ali_DNS_Access_Secret="${Ali_DNS_Access_Secret:-$(_readaccountconf_mutable Ali_DNS_Access_Secret)}"
 
   _debug "First detect the root zone"
   if ! _get_root "$fulldomain"; then
@@ -78,7 +78,7 @@ _get_root() {
 }
 
 _ali_rest() {
-  signature=$(printf "%s" "GET&%2F&$(_ali_urlencode "$query")" | _hmac "sha1" "$(printf "%s" "$Ali_Secret&" | _hex_dump | tr -d " ")" | _base64)
+  signature=$(printf "%s" "GET&%2F&$(_ali_urlencode "$query")" | _hmac "sha1" "$(printf "%s" "$Ali_DNS_Access_Secret&" | _hex_dump | tr -d " ")" | _base64)
   signature=$(_ali_urlencode "$signature")
   url="$Ali_API?$query&Signature=$signature"
 
@@ -124,7 +124,7 @@ _check_exist_query() {
   _qdomain="$1"
   _qsubdomain="$2"
   query=''
-  query=$query'AccessKeyId='$Ali_Key
+  query=$query'AccessKeyId='$Ali_DNS_Access_Id
   query=$query'&Action=DescribeDomainRecords'
   query=$query'&DomainName='$_qdomain
   query=$query'&Format=json'
@@ -139,7 +139,7 @@ _check_exist_query() {
 
 _add_record_query() {
   query=''
-  query=$query'AccessKeyId='$Ali_Key
+  query=$query'AccessKeyId='$Ali_DNS_Access_Id
   query=$query'&Action=AddDomainRecord'
   query=$query'&DomainName='$1
   query=$query'&Format=json'
@@ -155,7 +155,7 @@ _add_record_query() {
 
 _delete_record_query() {
   query=''
-  query=$query'AccessKeyId='$Ali_Key
+  query=$query'AccessKeyId='$Ali_DNS_Access_Id
   query=$query'&Action=DeleteDomainRecord'
   query=$query'&Format=json'
   query=$query'&RecordId='$1
@@ -168,7 +168,7 @@ _delete_record_query() {
 
 _describe_records_query() {
   query=''
-  query=$query'AccessKeyId='$Ali_Key
+  query=$query'AccessKeyId='$Ali_DNS_Access_Id
   query=$query'&Action=DescribeDomainRecords'
   query=$query'&DomainName='$1
   query=$query'&Format=json'
