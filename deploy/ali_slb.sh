@@ -30,12 +30,13 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
-  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ] || [ -z "$Ali_SLB_Region" ]; then
+  if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ] || [ -z "$Ali_SLB_Region" ] || [ -z "$Ali_SLB_Https_Port" ]; then
     Ali_SLB_Access_Id=""
     Ali_SLB_Access_Secret=""
     Ali_SLB_Id=""
     Ali_SLB_Region=""
-    _err "You don't specify aliyun api access key or secret or SLB_ID or SLB_Region yet"
+    Ali_SLB_Https_Port=""
+    _err "You don't specify Ali_SLB_Access_Id or Ali_SLB_Access_Secret or Ali_SLB_Id or Ali_SLB_Region or Ali_SLB_Https_Port yet"
     return 1
   fi
 
@@ -44,6 +45,7 @@ ali_slb_deploy() {
   _saveaccountconf_mutable Ali_SLB_Access_Secret "$Ali_SLB_Access_Secret"
   _saveaccountconf_mutable Ali_SLB_Id "$Ali_SLB_Id"
   _saveaccountconf_mutable Ali_SLB_Region "$Ali_SLB_Region"
+  _saveaccountconf_mutable Ali_SLB_Region "$Ali_SLB_Https_Port"
 
   _add_slb_ca_query "$_ckey" "$_cfullchain" && _ali_rest "UploadServerCertificate"
 
@@ -74,8 +76,8 @@ _ali_rest() {
   local _serverCertId=$(get_json_value "$response" "ServerCertificateId")
 
   if [ "UploadServerCertificate" == $1 ]; then
-    _debug "上传证书成功, 将证书绑定到监听端口443"
-    _set_slb_server_certificate "$Ali_SLB_Id" "$_serverCertId" && _ali_rest "Set Server Certificate on port 443"
+    _debug "上传证书成功, 将证书绑定到监听端口"
+    _set_slb_server_certificate "$Ali_SLB_Id" "$_serverCertId" && _ali_rest "Set Server Certificate on port"
   fi
 
   return 0
@@ -120,7 +122,7 @@ _set_slb_server_certificate() {
   query=$query'&Bandwidth=-1'
   query=$query'&CookieTimeout=86400'
   query=$query'&HealthCheck=off'
-  query=$query'&ListenerPort=443'
+  query=$query'&ListenerPort='$Ali_SLB_Https_Port
   query=$query'&LoadBalancerId='$slbId
   query=$query'&RegionId='$Ali_SLB_Region
   query=$query'&ServerCertificateId='$serverCertId
