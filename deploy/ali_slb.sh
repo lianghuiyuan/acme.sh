@@ -30,6 +30,12 @@ ali_slb_deploy() {
   _debug _cca "$_cca"
   _debug _cfullchain "$_cfullchain"
 
+  _debug Ali_SLB_Access_Id "$Ali_SLB_Access_Id"
+  _debug Ali_SLB_Access_Secret "$Ali_SLB_Access_Secret"
+  _debug Ali_SLB_Id "$Ali_SLB_Id"
+  _debug Ali_SLB_Region "$Ali_SLB_Region"
+  _debug Ali_SLB_Https_Port "$Ali_SLB_Https_Port"
+
   if [ -z "$Ali_SLB_Access_Id" ] || [ -z "$Ali_SLB_Access_Secret" ] || [ -z "$Ali_SLB_Id" ] || [ -z "$Ali_SLB_Region" ] || [ -z "$Ali_SLB_Https_Port" ]; then
     _debug "You don't specify Ali_SLB_Access_Id or Ali_SLB_Access_Secret or Ali_SLB_Id or Ali_SLB_Region or Ali_SLB_Https_Port yet"
     Ali_SLB_Access_Id=$(_readdomainconf "Ali_SLB_Access_Id")
