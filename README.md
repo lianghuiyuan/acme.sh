@@ -1,4 +1,4 @@
-* Add auto deploy aliyun SLB certs
+* Add auto deploy aliyun SLB certs （增加自动更新部署阿里云SLB证书）
 
 # An ACME Shell script: acme.sh [![Build Status](https://travis-ci.org/Neilpang/acme.sh.svg?branch=master)](https://travis-ci.org/Neilpang/acme.sh)
 
